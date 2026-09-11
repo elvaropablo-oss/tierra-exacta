@@ -38,6 +38,7 @@ export function renderPage(page) {
   <script type="application/ld+json">${schema}</script>
   <script type="module" src="${base}assets/app.js"></script>
   <script type="module" src="${base}assets/visuals.js"></script>
+  <script type="module" src="${base}assets/quality-fixes.js"></script>
 </head>
 <body class="page-${clean(page.path).replaceAll('/', '-') || 'inicio'}${page.tool ? ' page-tool' : ''}">
   <a class="skip-link" href="#contenido">Saltar al contenido</a>
