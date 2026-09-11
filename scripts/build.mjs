@@ -6,9 +6,32 @@ import { renderPage } from '../src/templates/site.mjs';
 import { site } from '../site.config.mjs';
 import { applyAnalyticsConsent } from './analytics-consent.mjs';
 import { applyShareableCalculations } from './shareable-calculations.mjs';
+import { applyCalculationExplanations } from './calculation-explanations.mjs';
 
 const verificationTag = '<meta name="google-site-verification" content="EwTiLP4eMZK5K7W9U_5tpM7cvJsn4ZaLvRwKYrmuuV0">';
 const shareableForms = ['round-form', 'bed-form', 'bags-form', 'mix-form'];
+const explanations = {
+  'round-form': {
+    formula: 'altura útil = altura interior − borde sin llenar; volumen tronco de cono = π × altura útil × (R² + Rr + r²) ÷ 3 ÷ 1000; litros finales = (volumen − deducciones) × cantidad',
+    fields: [['topDiameter', 'Diámetro superior', 'cm'], ['bottomDiameter', 'Diámetro inferior', 'cm'], ['height', 'Altura interior', 'cm'], ['freeboard', 'Borde sin llenar', 'cm'], ['deductions', 'Deducciones por maceta', 'L'], ['count', 'Cantidad de macetas']],
+    note: 'Si la maceta es cilíndrica, el radio superior e inferior son iguales. La división entre 1000 convierte cm³ en litros.'
+  },
+  'bed-form': {
+    formula: 'altura útil = altura interior − borde sin llenar; volumen por jardinera = largo × ancho × altura útil ÷ 1000 − deducciones; total = volumen por jardinera × cantidad',
+    fields: [['length', 'Largo interior', 'cm'], ['width', 'Ancho interior', 'cm'], ['height', 'Altura interior', 'cm'], ['freeboard', 'Borde sin llenar', 'cm'], ['deductions', 'Deducciones por jardinera', 'L'], ['count', 'Cantidad']],
+    note: 'Usar medidas interiores evita contar el grosor de paredes o elementos que no pueden contener sustrato.'
+  },
+  'bags-form': {
+    formula: 'objetivo = litros necesarios × (1 + margen/100); nº sacos = techo(objetivo ÷ litros por saco); comprado = nº sacos × litros por saco; coste = nº sacos × precio',
+    fields: [['requiredLitres', 'Litros necesarios', 'L'], ['reserve', 'Margen', '%'], ['bagSize', 'Tamaño de saco', 'L'], ['price', 'Precio por saco', '€']],
+    note: 'El número de sacos se redondea siempre hacia arriba para no quedarse corto.'
+  },
+  'mix-form': {
+    formula: 'litros de cada componente = litros totales × porcentaje del componente ÷ 100; la suma de porcentajes debe ser 100 %',
+    fields: [['totalLitres', 'Volumen total', 'L'], ['percentage1', 'Porcentaje componente 1', '%'], ['percentage2', 'Porcentaje componente 2', '%'], ['percentage3', 'Porcentaje componente 3', '%']],
+    note: 'La herramienta reparte volumen; la idoneidad agronómica de la mezcla depende de la planta y de los productos concretos.'
+  }
+};
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = path.join(root, 'dist');
 await rm(dist, { recursive: true, force: true });
@@ -24,6 +47,7 @@ for (const page of pages) {
     storageKey: 'te:v1:analytics-consent'
   });
   html = applyShareableCalculations(html, shareableForms);
+  html = applyCalculationExplanations(html, explanations);
   if (page.path === '') html = html.replace('<head>', `<head>\n  ${verificationTag}`);
   await writeFile(destination, html, 'utf8');
 }
