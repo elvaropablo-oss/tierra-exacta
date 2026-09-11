@@ -63,7 +63,7 @@ export const pages = [
   },
   {
     path: 'privacidad', h1: 'Privacidad en TierraExacta', title: 'Privacidad | TierraExacta', description: 'Información sobre cálculo local, almacenamiento y medición de uso en TierraExacta.',
-    content: `${crumb('Privacidad', 'privacidad/')} ${hero('Datos mínimos', 'Privacidad en TierraExacta', 'Tus medidas se calculan dentro del navegador y no se envían a un servidor propio.', '', false)}<article class="prose"><h2>Medidas introducidas</h2><p>El último resultado puede guardarse en el almacenamiento local de tu navegador. No se necesita una cuenta y TierraExacta no recibe el contenido de los formularios.</p><h2>Analítica</h2><p>La web utiliza Google Analytics para conocer visitas y uso general mediante el identificador G-EL1YW63SXD. Google puede tratar datos técnicos de navegación según su propia política.</p></article>`
+    content: `${crumb('Privacidad', 'privacidad/')} ${hero('Datos mínimos', 'Privacidad en TierraExacta', 'Tus medidas se calculan dentro del navegador y no se envían a un servidor propio.', '', false)}<article class="prose"><h2>Medidas introducidas</h2><p>El último resultado puede guardarse en el almacenamiento local de tu navegador. No se necesita una cuenta y TierraExacta no recibe el contenido de los formularios.</p><h2>Analítica</h2><p>Google Analytics está pendiente de configurarse con un identificador propio para esta web.</p></article>`
   },
   { path: '404', output: '404.html', noindex: true, h1: 'Página no encontrada', title: 'Página no encontrada | TierraExacta', description: 'La página solicitada no existe.', content: `${hero('Error 404', 'Esta página no ha echado raíces', 'La dirección puede contener un error o haber cambiado.', button('', 'Volver al inicio'), false)}` }
 ];
