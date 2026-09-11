@@ -19,6 +19,5 @@ for (const page of pages) {
 }
 const urls = pages.filter((page) => !page.noindex && page.path !== '404').map((page) => `  <url><loc>${site.origin}${site.basePath}${page.path ? `${page.path}/` : ''}</loc></url>`).join('\n');
 await writeFile(path.join(dist, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`, 'utf8');
-await writeFile(path.join(dist, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${site.origin}${site.basePath}sitemap.xml\n`, 'utf8');
 await writeFile(path.join(dist, '.nojekyll'), '', 'utf8');
 console.log(`Built ${pages.length} pages in dist/`);
