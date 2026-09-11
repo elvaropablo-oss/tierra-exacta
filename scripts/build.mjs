@@ -5,6 +5,7 @@ import { pages } from '../src/pages/pages.mjs';
 import { renderPage } from '../src/templates/site.mjs';
 import { site } from '../site.config.mjs';
 
+const verificationTag = '<meta name="google-site-verification" content="EwTiLP4eMZK5K7W9U_5tpM7cvJsn4ZaLvRwKYrmuuV0">';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = path.join(root, 'dist');
 await rm(dist, { recursive: true, force: true });
@@ -15,7 +16,9 @@ await cp(path.join(root, 'src/assets/favicon.svg'), path.join(dist, 'assets/favi
 for (const page of pages) {
   const destination = page.output ? path.join(dist, page.output) : page.path ? path.join(dist, page.path, 'index.html') : path.join(dist, 'index.html');
   await mkdir(path.dirname(destination), { recursive: true });
-  await writeFile(destination, renderPage(page), 'utf8');
+  let html = renderPage(page);
+  if (page.path === '') html = html.replace('<head>', `<head>\n  ${verificationTag}`);
+  await writeFile(destination, html, 'utf8');
 }
 const urls = pages.filter((page) => !page.noindex && page.path !== '404').map((page) => `  <url><loc>${site.origin}${site.basePath}${page.path ? `${page.path}/` : ''}</loc></url>`).join('\n');
 await writeFile(path.join(dist, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`, 'utf8');
