@@ -6,11 +6,15 @@ const dist = path.join(root, 'dist');
 const htmlFiles = await walk(dist, '.html');
 const publicPaths = new Set((await walk(dist)).map((file) => `/${path.relative(dist, file).replaceAll('\\', '/')}`));
 const failures = [];
+const analyticsId = 'G-F721EVSWRC';
 for (const file of htmlFiles) {
   const html = await readFile(file, 'utf8');
   const rel = path.relative(dist, file);
   if ((html.match(/<h1\b/g) || []).length !== 1) failures.push(`${rel}: debe contener un H1`);
   for (const required of ['<title>', 'name="description"', 'rel="canonical"', 'application/ld+json']) if (!html.includes(required)) failures.push(`${rel}: falta ${required}`);
+  if (!html.includes(analyticsId)) failures.push(`${rel}: falta el identificador de Analytics de TierraExacta`);
+  if (!html.includes('data-analytics-consent')) failures.push(`${rel}: falta el control de consentimiento de Analytics`);
+  if (!html.includes('data-site-analytics')) failures.push(`${rel}: falta el cargador diferido de Analytics`);
   if (html.includes('G-EL1YW63SXD')) failures.push(`${rel}: conserva por error la etiqueta de HornoExacto`);
   for (const match of html.matchAll(/(?:href|src)="(\/tierra-exacta\/[^"#?]*)/g)) {
     let target = match[1].replace('/tierra-exacta', '') || '/index.html';
@@ -24,7 +28,7 @@ for (const file of htmlFiles) {
 const sitemap = await readFile(path.join(dist, 'sitemap.xml'), 'utf8');
 for (const required of ['litros-maceta/', 'jardinera-bancal/', 'sacos-sustrato/', 'mezcla-sustrato/']) if (!sitemap.includes(required)) failures.push(`sitemap: falta ${required}`);
 if (sitemap.includes('404')) failures.push('sitemap: contiene una ruta no indexable');
-if (failures.length) { console.error(failures.join('\n')); process.exitCode = 1; } else console.log(`Checked ${htmlFiles.length} HTML files, local references, JSON-LD and sitemap.`);
+if (failures.length) { console.error(failures.join('\n')); process.exitCode = 1; } else console.log(`Checked ${htmlFiles.length} HTML files, Analytics consent, local references, JSON-LD and sitemap.`);
 async function walk(directory, extension = null) {
   const files = [];
   for (const name of await readdir(directory)) {
