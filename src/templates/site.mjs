@@ -3,7 +3,7 @@ import { site } from '../../site.config.mjs';
 const base = site.basePath;
 const clean = (value = '') => value.replace(/^\/+|\/+$/g, '');
 const active = (current, target) => clean(current) === clean(target) || clean(current).startsWith(`${clean(target)}/`);
-const assetVersion = '20260912-3';
+const assetVersion = '20260912-4';
 
 export function button(path, label, quiet = false) {
   return `<a class="button${quiet ? ' button--quiet' : ''}" href="${base}${path}">${label}<span aria-hidden="true">↗</span></a>`;
@@ -15,6 +15,18 @@ export function breadcrumbs(items) {
 
 export function hero(kicker, title, intro, actions = '', diagram = true) {
   return `<section class="hero"><div class="hero-copy"><p class="eyebrow">${kicker}</p><h1>${title}</h1><p class="lead">${intro}</p>${actions ? `<div class="actions">${actions}</div>` : ''}</div>${diagram ? `<div class="pot-plan" aria-hidden="true"><div class="measure measure--top"><span>Ø 40</span></div><div class="pot"><div class="soil"><i></i><i></i><i></i></div></div><div class="measure measure--side"><span>30 cm</span></div><b>28,8 L</b><small>VISTA INTERIOR · 01</small></div>` : ''}</section>`;
+}
+
+function commerceEntry() {
+  return `<section class="commerce-entry" data-commerce-entry><div class="commerce-entry__box"><div><p class="eyebrow">Comparador de productos reales</p><h2>Compra el sustrato que encaja con tus litros</h2><p>Compara productos reales de Leroy Merlin, BAUHAUS y ManoMano por sacos necesarios, coste total, sobrante e índice calidad-precio. Los enlaces llevan a la ficha actual de cada tienda.</p></div><a class="button button--clay" href="${base}sacos-sustrato/">Abrir comparador de sustratos <span aria-hidden="true">↗</span></a></div></section>`;
+}
+
+function commercePrelude() {
+  return `<section class="commerce-prelude" data-commerce-prelude><div class="commerce-prelude__box"><div><p class="eyebrow">Compra comparada</p><h2>Productos reales para el volumen que necesitas</h2><p>El comparador usa el volumen y el margen del formulario para calcular cuántos sacos completos comprar de cada producto y cuánto sobra.</p><p class="commerce-prelude__status" data-commerce-status>El comparador se carga automáticamente con los valores actuales.</p><noscript><p class="commerce-prelude__status" data-error="true">Activa JavaScript para calcular la comparación de productos. La calculadora geométrica seguirá disponible.</p></noscript></div><a class="button button--clay" href="#substrate-commerce">Ver productos recomendados <span aria-hidden="true">↓</span></a></div></section>`;
+}
+
+function commerceMethodology() {
+  return `<section class="commerce-methodology"><p class="eyebrow">Comparador comercial</p><h2>Cómo se calcula la calidad-precio</h2><p>Primero calculamos el número entero de sacos necesario para completar tu volumen con margen. La puntuación económica usa el coste total real del proyecto, no solo el precio por litro. El índice técnico utiliza únicamente características publicadas por la tienda o el fabricante. Si faltan datos suficientes, no se publica una nota de calidad-precio.</p><div class="commerce-methodology-grid"><article><strong>55 %</strong><span>Economía: coste real para completar tu volumen.</span></article><article><strong>45 %</strong><span>Índice técnico: características documentadas y comparables.</span></article><article><strong>0 %</strong><span>Comisión de afiliación: nunca interviene en el ranking.</span></article></div></section>`;
 }
 
 export function renderPage(page) {
@@ -33,6 +45,10 @@ export function renderPage(page) {
     ]
   }).replace(/</g, '\\u003c');
   const nav = (path, label) => `<a href="${base}${path}"${active(page.path, path) ? ' aria-current="page"' : ''}>${label}</a>`;
+  let content = page.content;
+  if (page.path === '' || page.path === 'herramientas') content = content.replace('</section>', `</section>${commerceEntry()}`);
+  if (page.path === 'sacos-sustrato') content = content.replace('<section class="calculator">', `${commercePrelude()}<section class="calculator">`);
+  if (page.path === 'metodologia') content += commerceMethodology();
   return `<!doctype html>
 <html lang="es">
 <head>
@@ -53,6 +69,7 @@ export function renderPage(page) {
   <meta name="twitter:description" content="${page.description}">
   <link rel="icon" href="${base}assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="${base}assets/site.css?v=${assetVersion}">
+  <link rel="stylesheet" href="${base}assets/commerce-entry.css?v=${assetVersion}">
   <script type="application/ld+json">${schema}</script>
   <script type="application/ld+json">${breadcrumbSchema}</script>
   <script type="module" src="${base}assets/app.js?v=${assetVersion}"></script>
@@ -62,7 +79,7 @@ export function renderPage(page) {
 <body class="page-${clean(page.path).replaceAll('/', '-') || 'inicio'}${page.tool ? ' page-tool' : ''}">
   <a class="skip-link" href="#contenido">Saltar al contenido</a>
   <header class="site-header"><a class="brand" href="${base}" aria-label="TierraExacta, inicio"><svg viewBox="0 0 44 44" aria-hidden="true"><path d="M8 9h28l-4 27H12z"/><path d="M5 9h34M14 21c5-5 11-6 18-5M12 29c8-4 14-4 21-3"/></svg><span>Tierra<strong>Exacta</strong></span></a><button class="menu" type="button" data-menu aria-controls="site-nav" aria-expanded="false">Menú</button><nav id="site-nav" aria-label="Principal">${nav('herramientas/', 'Herramientas')}${nav('guias/medir-maceta/', 'Cómo medir')}${nav('metodologia/', 'Fórmulas')}</nav></header>
-  <main id="contenido">${page.content}</main>
+  <main id="contenido">${content}</main>
   <footer><div><a class="footer-brand" href="${base}">TierraExacta</a><p>Calcula primero. Compra solo la tierra que necesitas.</p></div><nav aria-label="Información"><a href="${base}preguntas-frecuentes/">Preguntas</a><a href="${base}sobre/">Sobre</a><a href="${base}privacidad/">Privacidad</a></nav><p class="footer-note">Las cifras son una estimación geométrica. Comprueba siempre las medidas interiores.</p></footer>
 </body>
 </html>`;
