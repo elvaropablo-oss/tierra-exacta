@@ -1,6 +1,7 @@
-export function applyAnalyticsConsent(html, { measurementId, storageKey }) {
+export function applyAnalyticsConsent(html, { measurementId, storageKey, googleTagId = measurementId }) {
   const id = JSON.stringify(measurementId);
   const key = JSON.stringify(storageKey);
+  const tag = JSON.stringify(googleTagId);
   const head = `  <style>
     .analytics-consent{position:fixed;z-index:9999;left:1rem;right:1rem;bottom:1rem;max-width:760px;margin:auto;padding:1rem 1.1rem;background:#fff;color:#171717;border:2px solid currentColor;box-shadow:0 8px 30px rgb(0 0 0 / .16);font:inherit}
     .analytics-consent[hidden]{display:none}.analytics-consent p{margin:.35rem 0 .8rem}.analytics-consent__actions{display:flex;gap:.6rem;flex-wrap:wrap}.analytics-consent__settings{font:inherit;background:none;border:0;text-decoration:underline;cursor:pointer;padding:.35rem}
@@ -9,6 +10,7 @@ export function applyAnalyticsConsent(html, { measurementId, storageKey }) {
   <script>
   (() => {
     const measurementId = ${id};
+    const googleTagId = ${tag};
     const storageKey = ${key};
     let loaded = false;
     const readChoice = () => { try { return localStorage.getItem(storageKey); } catch { return null; } };
@@ -26,10 +28,10 @@ export function applyAnalyticsConsent(html, { measurementId, storageKey }) {
       window.gtag = window.gtag || function(){ window.dataLayer.push(arguments); };
       window.gtag('consent', 'default', { analytics_storage: 'granted', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' });
       window.gtag('js', new Date());
-      window.gtag('config', measurementId);
+      window.gtag('config', googleTagId);
       const script = document.createElement('script');
       script.async = true;
-      script.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(measurementId);
+      script.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(googleTagId);
       script.dataset.siteAnalytics = 'true';
       document.head.append(script);
     };
