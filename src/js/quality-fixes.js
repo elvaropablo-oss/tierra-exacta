@@ -80,7 +80,7 @@ function loadSubstrateCommerce(){
 
 function loadMixCommerce(){
   if(!document.querySelector('#mix-form'))return;
-  const start=()=>import('./mix-commerce.js?v=20260912-1').catch(error=>console.error('No se pudo cargar la compra calculada de la mezcla',error));
+  const start=()=>import('./mix-commerce.js?v=20260912-2').catch(error=>console.error('No se pudo cargar la compra calculada de la mezcla',error));
   withCommerceEngine(start,()=>console.error('No se pudo cargar CommerceEngine para la mezcla'));
 }
 
