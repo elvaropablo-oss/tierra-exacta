@@ -3,7 +3,7 @@ import { site } from '../../site.config.mjs';
 const base = site.basePath;
 const clean = (value = '') => value.replace(/^\/+|\/+$/g, '');
 const active = (current, target) => clean(current) === clean(target) || clean(current).startsWith(`${clean(target)}/`);
-const assetVersion = '20260912-8';
+const assetVersion = '20260912-9';
 
 export function button(path, label, quiet = false) {
   return `<a class="button${quiet ? ' button--quiet' : ''}" href="${base}${path}">${label}<span aria-hidden="true">↗</span></a>`;
