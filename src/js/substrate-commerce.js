@@ -8,13 +8,13 @@ const money=value=>new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR
 const fmt=(value,digits=1)=>new Intl.NumberFormat('es-ES',{maximumFractionDigits:digits}).format(value);
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const number=name=>{const raw=String(form.elements.namedItem(name)?.value??'').replace(',','.');const parsed=Number.parseFloat(raw);return Number.isFinite(parsed)?parsed:0;};
-let active=false;
+let active=true;
 
 function ensureStyles(){
   if(document.querySelector('link[data-commerce-style]'))return;
   const link=document.createElement('link');
   link.rel='stylesheet';
-  link.href='/tierra-exacta/assets/commerce.css?v=20260912-2';
+  link.href='/tierra-exacta/assets/commerce.css?v=20260912-3';
   link.dataset.commerceStyle='';
   document.head.appendChild(link);
 }
@@ -28,11 +28,11 @@ function ensureSection(){
   section.setAttribute('aria-labelledby','substrate-commerce-title');
   section.innerHTML=`
     <div class="commerce-head">
-      <div><p class="eyebrow">Compra comparada</p><h2 id="substrate-commerce-title">Sustratos reales para tu volumen</h2><p>Usamos los litros que acabas de calcular para comparar sacos reales: cuántos necesitas, coste total, sobrante e índice calidad-precio.</p></div>
+      <div><p class="eyebrow">Compra comparada</p><h2 id="substrate-commerce-title">Sustratos reales para tu volumen</h2><p>Usamos tus litros para comparar sacos reales: cuántos necesitas, coste total, sobrante e índice calidad-precio.</p></div>
       <label class="commerce-sort">Ordenar por<select data-commerce-sort><option value="value">Calidad-precio</option><option value="cost">Coste total</option><option value="waste">Menor sobrante</option><option value="technical">Índice técnico</option></select></label>
     </div>
     <div class="commerce-recommended" data-commerce-recommended hidden></div>
-    <div class="commerce-summary" data-commerce-summary><div class="commerce-empty">Calcula los sacos para generar una comparación con tu volumen.</div></div>
+    <div class="commerce-summary" data-commerce-summary></div>
     <div class="commerce-winners" data-commerce-winners></div>
     <div class="commerce-products" data-commerce-products></div>
     <div class="commerce-method">
@@ -40,7 +40,7 @@ function ensureSection(){
       <p class="commerce-disclosure">Precios comprobados el ${verifiedAt.split('-').reverse().join('/')}; pueden cambiar y no incluyen transporte. Los enlaces son oficiales. Cuando exista afiliación activa, algunos podrán generar una comisión sin coste adicional y sin alterar el ranking. <a href="/afiliacion.html" target="_blank" rel="noopener noreferrer">Cómo funciona la afiliación</a>.</p>
     </div>`;
   document.querySelector('.calculator')?.insertAdjacentElement('afterend',section);
-  section.querySelector('[data-commerce-sort]')?.addEventListener('change',()=>{if(active)render();});
+  section.querySelector('[data-commerce-sort]')?.addEventListener('change',render);
   return section;
 }
 
@@ -136,6 +136,7 @@ function render(){
 
 ensureStyles();
 ensureSection();
+render();
 form.addEventListener('submit',()=>{active=true;setTimeout(render,0);});
 form.addEventListener('input',()=>{if(active)render();});
 document.addEventListener('click',event=>{
@@ -146,4 +147,3 @@ document.addEventListener('click',event=>{
   render();
   ensureSection().scrollIntoView({behavior:'smooth',block:'start'});
 });
-if(new URLSearchParams(location.search).get('litros')){active=true;render();}
