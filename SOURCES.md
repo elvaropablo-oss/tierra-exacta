@@ -1,6 +1,8 @@
 # Fuentes consultadas
 
-Consultadas el 11 de septiembre de 2026 para contrastar fórmulas, términos y expectativas de las calculadoras existentes.
+Consultadas o revisadas el 12 de septiembre de 2026 para contrastar fórmulas, términos, catálogo comercial y nuevas guías de cuidados.
+
+## Geometría y calculadoras
 
 - https://www.calcularlitros.com/blog/como-calcular-litros-maceta-jardinera.html
 - https://calchogar.com/calculadoras/jardineria/calculadora-tierra-sustrato/
@@ -10,6 +12,20 @@ Consultadas el 11 de septiembre de 2026 para contrastar fórmulas, términos y e
 - https://calculatorlib.com/es/potting-soil-calculator
 
 Las fórmulas geométricas se muestran en la página Metodología. Los ejemplos iniciales no constituyen recomendaciones agronómicas.
+
+## Cuidados y diagnóstico orientativo
+
+Las guías y el diagnóstico no identifican enfermedades ni sustituyen conocer las necesidades de una especie concreta. Se usan para ordenar comprobaciones de cultivo como humedad, drenaje, trasplante, raíces y cambios de ambiente.
+
+- Royal Horticultural Society (RHS), How to help a poorly houseplant: https://www.rhs.org.uk/plants/types/houseplants/how-to-help-a-poorly-houseplant
+- RHS, How to repot a plant: https://www.rhs.org.uk/container-gardening/how-to-repot-a-plant
+- RHS, Leaf damage on houseplants: https://www.rhs.org.uk/prevention-protection/leaf-damage-on-houseplants
+- Penn State Extension, Repotting Houseplants: https://extension.psu.edu/repotting-houseplants
+- Penn State Extension, Transplanting Annuals into the Garden: https://extension.psu.edu/transplanting-annuals-into-the-garden
+- University of Illinois Extension, Houseplants — Get Started: https://extension.illinois.edu/houseplants/get-started
+- University of Illinois Extension, Houseplants — Troubleshooting: https://extension.illinois.edu/houseplants/troubleshooting
+
+Principios reflejados en las guías: el marchitamiento puede aparecer tanto con falta como con exceso de agua; el drenaje y el estado real del sustrato deben comprobarse antes de regar de nuevo; un trasplante o un cambio de ambiente pueden provocar estrés; y una maceta desproporcionadamente grande puede mantener demasiado sustrato húmedo alrededor de un cepellón pequeño.
 
 ## Comparador de sustratos
 
@@ -36,4 +52,4 @@ El comparador calcula la compra real necesaria para el volumen objetivo: número
 
 El índice técnico utiliza únicamente características declaradas en las fuentes comerciales: uso universal, nutrientes o abono, aireación/drenaje, gestión de humedad, ausencia de turba y aptitud para agricultura ecológica. Si la cobertura de datos técnicos no alcanza el mínimo definido por el motor común, no se publica una puntuación de calidad-precio para ese producto.
 
-Las comisiones de afiliación y el estado de aprobación de una tienda no intervienen en la clasificación.
+En las páginas de cuidados, cuando se muestran productos, se filtran únicamente por características documentadas que encajen con el contexto (por ejemplo, aireación/drenaje declarado) y se ordenan por precio por litro dentro del filtro. Las comisiones de afiliación y el estado de aprobación de una tienda no intervienen en ese orden.
