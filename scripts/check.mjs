@@ -29,7 +29,10 @@ for (const file of htmlFiles) {
 const sitemap = await readFile(path.join(dist, 'sitemap.xml'), 'utf8');
 for (const required of ['litros-maceta/', 'jardinera-bancal/', 'sacos-sustrato/', 'mezcla-sustrato/']) if (!sitemap.includes(required)) failures.push(`sitemap: falta ${required}`);
 if (sitemap.includes('404')) failures.push('sitemap: contiene una ruta no indexable');
-if (failures.length) { console.error(failures.join('\n')); process.exitCode = 1; } else console.log(`Checked ${htmlFiles.length} HTML files, inline JavaScript, Analytics consent, local references, JSON-LD and sitemap.`);
+const privacy=await readFile(path.join(dist,'privacidad','index.html'),'utf8');
+if(privacy.includes('Esta versión no instala Google Analytics'))failures.push('privacidad: afirma erróneamente que no existe Google Analytics');
+if(!privacy.includes('Google Analytics solo se carga después de que aceptes la analítica'))failures.push('privacidad: falta explicación del consentimiento de Analytics');
+if (failures.length) { console.error(failures.join('\n')); process.exitCode = 1; } else console.log(`Checked ${htmlFiles.length} HTML files, inline JavaScript, Analytics consent/privacy, local references, JSON-LD and sitemap.`);
 function validateInlineScripts(html, rel, failures) { for (const match of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)) { const attrs=match[1]||''; if (/\bsrc\s*=/i.test(attrs)) continue; const type=(attrs.match(/\btype=["']([^"']+)["']/i)?.[1]||'').toLowerCase(); if(type&&!['text/javascript','application/javascript'].includes(type))continue; try{new Function(match[2]);}catch(error){failures.push(`${rel}: JavaScript inline no válido (${error.message})`);} } }
 async function walk(directory, extension = null) {
   const files = [];
