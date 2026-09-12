@@ -35,7 +35,7 @@ test('calcula la compra del ejemplo 7,71 L al 60/25/15',()=>{
   assert.deepEqual(rows.map(row=>row.purchase.units),[1,1,1]);
   assert.deepEqual(rows.map(row=>row.purchase.purchased),[5,20,5]);
   const total=rows.reduce((sum,row)=>sum+row.purchase.cost,0);
-  assert.equal(total,23.95);
+  assert.ok(Math.abs(total-23.95)<0.000001);
 });
 
 test('el catálogo comercial conserva fuente, fecha y AWIN inactivo',()=>{
