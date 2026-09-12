@@ -11,12 +11,20 @@ const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&
 let latestResult=null;
 
 function ensureStyles(){
-  if(document.querySelector('link[data-mix-commerce-style]'))return;
-  const link=document.createElement('link');
-  link.rel='stylesheet';
-  link.href='/tierra-exacta/assets/commerce.css?v=20260912-5';
-  link.dataset.mixCommerceStyle='';
-  document.head.appendChild(link);
+  if(!document.querySelector('link[data-commerce-base-style]')){
+    const base=document.createElement('link');
+    base.rel='stylesheet';
+    base.href='/tierra-exacta/assets/commerce.css?v=20260912-5';
+    base.dataset.commerceBaseStyle='';
+    document.head.appendChild(base);
+  }
+  if(!document.querySelector('link[data-mix-commerce-style]')){
+    const mix=document.createElement('link');
+    mix.rel='stylesheet';
+    mix.href='/tierra-exacta/assets/mix-commerce.css?v=20260912-1';
+    mix.dataset.mixCommerceStyle='';
+    document.head.appendChild(mix);
+  }
 }
 
 function ensureSection(){
