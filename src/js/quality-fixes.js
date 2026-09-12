@@ -6,13 +6,6 @@ footer .analytics-consent__settings{color:inherit!important}
 .project-library-launcher{transition:bottom .16s ease}
 .hero-copy>.eyebrow,.field-note .eyebrow{color:#a53c28!important}
 .tool-index .eyebrow{color:#f4d2bd!important}
-.commerce-entry{max-width:1120px;margin:-18px auto 72px;padding:0 24px}
-.commerce-entry__box{display:grid;grid-template-columns:1fr auto;gap:28px;align-items:center;padding:28px;background:var(--forest);color:var(--white);border:1px solid var(--forest-dark);box-shadow:8px 8px 0 var(--sun)}
-.commerce-entry__box .eyebrow{color:var(--sun)!important;margin-bottom:8px}
-.commerce-entry__box h2{font-size:clamp(30px,4vw,48px);margin:0 0 10px}
-.commerce-entry__box p{margin:0;max-width:720px;color:#d7e2dc}
-.commerce-entry__box .button{min-width:245px;background:var(--clay);border-color:var(--clay)}
-@media(max-width:760px){.commerce-entry__box{grid-template-columns:1fr}.commerce-entry__box .button{width:100%;min-width:0}.commerce-entry{margin-top:0}}
 `;
 document.head.appendChild(style);
 
@@ -38,36 +31,41 @@ function addPortfolioHubLink(){
   host.appendChild(a);
 }
 
-function addCommerceEntry(){
-  if(!(document.body.classList.contains('page-inicio')||document.body.classList.contains('page-herramientas')))return;
-  if(document.querySelector('[data-commerce-entry]'))return;
-  const hero=document.querySelector('.hero');
-  if(!hero)return;
-  const section=document.createElement('section');
-  section.className='commerce-entry';
-  section.dataset.commerceEntry='';
-  section.innerHTML=`<div class="commerce-entry__box"><div><p class="eyebrow">Nuevo · comparador real</p><h2>Compara sustratos por coste, sobrante y calidad-precio</h2><p>Introduce los litros que necesitas y TierraExacta calcula cuántos sacos comprar de productos reales de Leroy Merlin, BAUHAUS y ManoMano, con enlace directo a la tienda.</p></div><a class="button button--clay" href="/tierra-exacta/sacos-sustrato/">Abrir comparador de sustratos <span aria-hidden="true">↗</span></a></div>`;
-  hero.insertAdjacentElement('afterend',section);
-}
-
 function loadMonetization(){
   if(document.querySelector('script[src*="/assets/monetization.js"]'))return;
   const s=document.createElement('script');
-  s.src='/assets/monetization.js?v=20260912-1';
+  s.src='/assets/monetization.js?v=20260912-2';
   s.defer=true;
   document.head.appendChild(s);
 }
 
+function setCommerceStatus(message,{error=false,hidden=false}={}){
+  const status=document.querySelector('[data-commerce-status]');
+  if(!status)return;
+  status.hidden=hidden;
+  if(message)status.textContent=message;
+  if(error)status.dataset.error='true';else delete status.dataset.error;
+}
+
 function loadSubstrateCommerce(){
   if(!document.querySelector('#bags-form'))return;
-  const start=()=>import('./substrate-commerce.js?v=20260912-3').catch(error=>console.error('No se pudo cargar el comparador de sustratos',error));
+  setCommerceStatus('Cargando catálogo y comparador…');
+  const start=()=>import('./substrate-commerce.js?v=20260912-4')
+    .then(()=>setCommerceStatus('',{hidden:true}))
+    .catch(error=>{
+      console.error('No se pudo cargar el comparador de sustratos',error);
+      setCommerceStatus('No se pudo cargar el comparador. Recarga la página; la calculadora de sacos sigue funcionando.',{error:true});
+    });
   if(window.CommerceEngine){start();return;}
   const existing=document.querySelector('script[src*="/assets/commerce-engine.js"]');
-  if(existing){existing.addEventListener('load',start,{once:true});return;}
+  if(existing){existing.addEventListener('load',start,{once:true});existing.addEventListener('error',()=>setCommerceStatus('No se pudo cargar el motor de comparación. Recarga la página.',{error:true}),{once:true});return;}
   const s=document.createElement('script');
   s.src='/assets/commerce-engine.js?v=20260912-1';
   s.onload=start;
-  s.onerror=()=>console.error('No se pudo cargar CommerceEngine');
+  s.onerror=()=>{
+    console.error('No se pudo cargar CommerceEngine');
+    setCommerceStatus('No se pudo cargar el motor de comparación. Recarga la página.',{error:true});
+  };
   s.defer=true;
   document.head.appendChild(s);
 }
@@ -76,7 +74,6 @@ addEventListener('scroll',keepLauncherClear,{passive:true});
 addEventListener('resize',keepLauncherClear);
 new MutationObserver(keepLauncherClear).observe(document.body,{childList:true,subtree:true});
 addPortfolioHubLink();
-addCommerceEntry();
 keepLauncherClear();
 loadMonetization();
 loadSubstrateCommerce();
