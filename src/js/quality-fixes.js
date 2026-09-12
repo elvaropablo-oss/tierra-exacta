@@ -47,6 +47,22 @@ function setCommerceStatus(message,{error=false,hidden=false}={}){
   if(error)status.dataset.error='true';else delete status.dataset.error;
 }
 
+function withCommerceEngine(start,onError){
+  if(window.CommerceEngine){start();return;}
+  const existing=document.querySelector('script[src*="/assets/commerce-engine.js"]');
+  if(existing){
+    existing.addEventListener('load',start,{once:true});
+    existing.addEventListener('error',onError,{once:true});
+    return;
+  }
+  const s=document.createElement('script');
+  s.src='/assets/commerce-engine.js?v=20260912-1';
+  s.onload=start;
+  s.onerror=onError;
+  s.defer=true;
+  document.head.appendChild(s);
+}
+
 function loadSubstrateCommerce(){
   if(!document.querySelector('#bags-form'))return;
   setCommerceStatus('Cargando catálogo y comparador…');
@@ -56,18 +72,16 @@ function loadSubstrateCommerce(){
       console.error('No se pudo cargar el comparador de sustratos',error);
       setCommerceStatus('No se pudo cargar el comparador. Recarga la página; la calculadora de sacos sigue funcionando.',{error:true});
     });
-  if(window.CommerceEngine){start();return;}
-  const existing=document.querySelector('script[src*="/assets/commerce-engine.js"]');
-  if(existing){existing.addEventListener('load',start,{once:true});existing.addEventListener('error',()=>setCommerceStatus('No se pudo cargar el motor de comparación. Recarga la página.',{error:true}),{once:true});return;}
-  const s=document.createElement('script');
-  s.src='/assets/commerce-engine.js?v=20260912-1';
-  s.onload=start;
-  s.onerror=()=>{
+  withCommerceEngine(start,()=>{
     console.error('No se pudo cargar CommerceEngine');
     setCommerceStatus('No se pudo cargar el motor de comparación. Recarga la página.',{error:true});
-  };
-  s.defer=true;
-  document.head.appendChild(s);
+  });
+}
+
+function loadMixCommerce(){
+  if(!document.querySelector('#mix-form'))return;
+  const start=()=>import('./mix-commerce.js?v=20260912-1').catch(error=>console.error('No se pudo cargar la compra calculada de la mezcla',error));
+  withCommerceEngine(start,()=>console.error('No se pudo cargar CommerceEngine para la mezcla'));
 }
 
 addEventListener('scroll',keepLauncherClear,{passive:true});
@@ -77,3 +91,4 @@ addPortfolioHubLink();
 keepLauncherClear();
 loadMonetization();
 loadSubstrateCommerce();
+loadMixCommerce();
