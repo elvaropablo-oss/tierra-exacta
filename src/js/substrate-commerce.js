@@ -14,7 +14,7 @@ function ensureStyles(){
   if(document.querySelector('link[data-commerce-style]'))return;
   const link=document.createElement('link');
   link.rel='stylesheet';
-  link.href='/tierra-exacta/assets/commerce.css?v=20260912-1';
+  link.href='/tierra-exacta/assets/commerce.css?v=20260912-2';
   link.dataset.commerceStyle='';
   document.head.appendChild(link);
 }
@@ -28,9 +28,10 @@ function ensureSection(){
   section.setAttribute('aria-labelledby','substrate-commerce-title');
   section.innerHTML=`
     <div class="commerce-head">
-      <div><p class="eyebrow">Compra comparada</p><h2 id="substrate-commerce-title">Sustratos reales para tu volumen</h2><p>Comparamos cuántos sacos necesitas, cuánto gastarías y qué sobrante deja cada opción.</p></div>
+      <div><p class="eyebrow">Compra comparada</p><h2 id="substrate-commerce-title">Sustratos reales para tu volumen</h2><p>Usamos los litros que acabas de calcular para comparar sacos reales: cuántos necesitas, coste total, sobrante e índice calidad-precio.</p></div>
       <label class="commerce-sort">Ordenar por<select data-commerce-sort><option value="value">Calidad-precio</option><option value="cost">Coste total</option><option value="waste">Menor sobrante</option><option value="technical">Índice técnico</option></select></label>
     </div>
+    <div class="commerce-recommended" data-commerce-recommended hidden></div>
     <div class="commerce-summary" data-commerce-summary><div class="commerce-empty">Calcula los sacos para generar una comparación con tu volumen.</div></div>
     <div class="commerce-winners" data-commerce-winners></div>
     <div class="commerce-products" data-commerce-products></div>
@@ -66,6 +67,22 @@ function knownSpecs(row){
   return substrateCriteria.filter(c=>row.specs?.[c.key]!==null&&row.specs?.[c.key]!==undefined).map(c=>({label:c.label,value:row.specs[c.key]===true?'Sí':'No'}));
 }
 
+function recommendationCard(row,winners,targetData){
+  if(!row)return'';
+  const value=row.valueScore!==null?`${fmt(row.valueScore,0)}/100`:'—';
+  const reason=winners.bestValue?.id===row.id?'Es la mejor combinación entre coste real para tu volumen y características técnicas documentadas.':'Es la opción compatible con menor coste real para completar tu volumen entre las comparadas.';
+  return `<article class="recommended-product">
+    <div class="recommended-product__label">Recomendado para tu compra</div>
+    <div class="recommended-product__grid">
+      <div class="recommended-product__copy"><small>${esc(row.retailer)} · precio comprobado ${verifiedAt.split('-').reverse().join('/')}</small><h3>${esc(row.name)}</h3><p>${esc(reason)}</p><div class="commerce-features">${(row.featureLabels||[]).slice(0,4).map(x=>`<span>${esc(x)}</span>`).join('')}</div></div>
+      <div class="recommended-product__score"><b>${value}</b><span>calidad-precio</span></div>
+    </div>
+    <div class="recommended-product__numbers"><div><span>Compra necesaria</span><strong>${row.purchase.units} ${row.purchase.units===1?'saco':'sacos'}</strong></div><div><span>Volumen comprado</span><strong>${fmt(row.purchase.purchased,0)} L</strong></div><div><span>Sobrante</span><strong>${fmt(row.purchase.waste,1)} L</strong></div><div><span>Coste total</span><strong>${money(row.purchase.projectCost)}</strong></div></div>
+    <p class="recommended-product__context">Para un objetivo de <strong>${fmt(targetData.target,1)} L</strong>. El coste se calcula comprando envases completos, no con un €/L teórico.</p>
+    <a class="button button--clay recommended-product__cta" data-product-link="${esc(row.id)}" href="${esc(row.link.url)}" target="_blank" rel="${row.link.affiliate?'sponsored noopener noreferrer':'noopener noreferrer'}">Ver producto y precio actual <span aria-hidden="true">↗</span></a>
+  </article>`;
+}
+
 function productCard(row,winners){
   const badges=[];
   if(winners.cheapest?.id===row.id)badges.push('Menor coste');
@@ -81,8 +98,16 @@ function productCard(row,winners){
     <dl class="commerce-metrics"><div><dt>Precio/saco</dt><dd>${money(row.price)}</dd></div><div><dt>Sobrante</dt><dd>${fmt(row.purchase.waste,1)} L</dd></div><div><dt>€/L comprado</dt><dd>${money(row.purchase.unitCost)}</dd></div><div><dt>Índice técnico</dt><dd>${tech}</dd></div></dl>
     <div class="commerce-features">${(row.featureLabels||[]).map(x=>`<span>${esc(x)}</span>`).join('')}</div>
     <details class="commerce-tech"><summary>Ver criterios técnicos (${coverage}% documentado)</summary><ul>${knownSpecs(row).map(item=>`<li><span>${esc(item.label)}</span><b>${item.value}</b></li>`).join('')}</ul></details>
-    <a class="button commerce-link" data-product-link="${esc(row.id)}" href="${esc(row.link.url)}" target="_blank" rel="${row.link.affiliate?'sponsored noopener noreferrer':'noopener noreferrer'}">Ver producto en ${esc(row.retailer)} <span aria-hidden="true">↗</span></a>
+    <a class="button commerce-link" data-product-link="${esc(row.id)}" href="${esc(row.link.url)}" target="_blank" rel="${row.link.affiliate?'sponsored noopener noreferrer':'noopener noreferrer'}">Ver producto y precio actual <span aria-hidden="true">↗</span></a>
   </article>`;
+}
+
+function attachProductTracking(section,rows,targetData){
+  section.querySelectorAll('[data-product-link]').forEach(anchor=>anchor.addEventListener('click',()=>{
+    const product=substrateProducts.find(item=>item.id===anchor.dataset.productLink);
+    const row=rows.find(item=>item.id===product?.id);
+    if(product)engine.track('substrate_product_open',product,{required_litres:targetData.target,units:row?.purchase.units||null,project_cost:row?.purchase.projectCost||null});
+  }));
 }
 
 function render(){
@@ -94,6 +119,10 @@ function render(){
   const winners=engine.winners(rows);
   const mode=section.querySelector('[data-commerce-sort]')?.value||'value';
   const ordered=sortRows(rows,mode);
+  const recommended=winners.bestValue||winners.cheapest||ordered[0]||null;
+  const recommendedHost=section.querySelector('[data-commerce-recommended]');
+  recommendedHost.hidden=!recommended;
+  recommendedHost.innerHTML=recommendationCard(recommended,winners,targetData);
   section.querySelector('[data-commerce-summary]').innerHTML=`<div><span>Necesitas</span><b>${fmt(targetData.required,1)} L</b></div><div><span>Margen</span><b>${fmt(targetData.reserve,0)}%</b></div><div><span>Objetivo de compra</span><b>${fmt(targetData.target,1)} L</b></div><div><span>Productos comparados</span><b>${rows.length}</b></div>`;
   section.querySelector('[data-commerce-winners]').innerHTML=[
     winnerCard('Menor coste',winners.cheapest,winners.cheapest?money(winners.cheapest.purchase.projectCost):''),
@@ -102,14 +131,19 @@ function render(){
     winnerCard('Mejor índice técnico',winners.bestTechnical,winners.bestTechnical?`${fmt(winners.bestTechnical.technical.score,0)}/100`:'')
   ].join('');
   section.querySelector('[data-commerce-products]').innerHTML=ordered.map(row=>productCard(row,winners)).join('');
-  section.querySelectorAll('[data-product-link]').forEach(anchor=>anchor.addEventListener('click',()=>{
-    const product=substrateProducts.find(item=>item.id===anchor.dataset.productLink);
-    if(product)engine.track('substrate_product_open',product,{required_litres:targetData.target,units:rows.find(row=>row.id===product.id)?.purchase.units||null});
-  }));
+  attachProductTracking(section,rows,targetData);
 }
 
 ensureStyles();
 ensureSection();
 form.addEventListener('submit',()=>{active=true;setTimeout(render,0);});
 form.addEventListener('input',()=>{if(active)render();});
+document.addEventListener('click',event=>{
+  const trigger=event.target.closest('[data-compare-substrates]');
+  if(!trigger)return;
+  event.preventDefault();
+  active=true;
+  render();
+  ensureSection().scrollIntoView({behavior:'smooth',block:'start'});
+});
 if(new URLSearchParams(location.search).get('litros')){active=true;render();}
