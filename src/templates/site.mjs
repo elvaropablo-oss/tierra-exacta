@@ -3,7 +3,7 @@ import { site } from '../../site.config.mjs';
 const base = site.basePath;
 const clean = (value = '') => value.replace(/^\/+|\/+$/g, '');
 const active = (current, target) => clean(current) === clean(target) || clean(current).startsWith(`${clean(target)}/`);
-const assetVersion = '20260912-6';
+const assetVersion = '20260912-7';
 
 export function button(path, label, quiet = false) {
   return `<a class="button${quiet ? ' button--quiet' : ''}" href="${base}${path}">${label}<span aria-hidden="true">↗</span></a>`;
@@ -19,6 +19,10 @@ export function hero(kicker, title, intro, actions = '', diagram = true) {
 
 function commerceEntry() {
   return `<section class="commerce-entry" data-commerce-entry><div class="commerce-entry__box"><div><p class="eyebrow">Comparador de productos reales</p><h2>Compra el sustrato que encaja con tus litros</h2><p>Compara productos reales de Leroy Merlin, BAUHAUS y ManoMano por sacos necesarios, coste total, sobrante e índice calidad-precio. Los enlaces llevan a la ficha actual de cada tienda.</p></div><a class="button button--clay" href="${base}sacos-sustrato/">Abrir comparador de sustratos <span aria-hidden="true">↗</span></a></div></section>`;
+}
+
+function careEntry() {
+  return `<section class="commerce-entry care-entry" data-care-entry><div class="commerce-entry__box"><div><p class="eyebrow">Nuevo · cuidados y diagnóstico</p><h2>¿Tu planta está mustia, amarilla o no drena bien?</h2><p>Antes de comprar nada, revisa humedad, drenaje, raíces y cambios recientes. TierraExacta ordena qué comprobar y solo muestra productos cuando pueden encajar con una necesidad concreta de sustrato.</p></div><a class="button" href="${base}cuidados/">Abrir cuidados de plantas <span aria-hidden="true">↗</span></a></div></section>`;
 }
 
 function commercePrelude() {
@@ -46,7 +50,7 @@ export function renderPage(page) {
   }).replace(/</g, '\\u003c');
   const nav = (path, label) => `<a href="${base}${path}"${active(page.path, path) ? ' aria-current="page"' : ''}>${label}</a>`;
   let content = page.content;
-  if (page.path === '' || page.path === 'herramientas') content = content.replace('</section>', `</section>${commerceEntry()}`);
+  if (page.path === '' || page.path === 'herramientas') content = content.replace('</section>', `</section>${commerceEntry()}${careEntry()}`);
   if (page.path === 'sacos-sustrato') content = content.replace('<section class="calculator">', `${commercePrelude()}<section class="calculator">`);
   if (page.path === 'metodologia') content += commerceMethodology();
   if (page.path === 'privacidad') content = content.replace('Google Analytics está pendiente de configurarse con un identificador propio para esta web.','Google Analytics solo se carga después de que aceptes la analítica mediante el control de consentimiento. Si no aceptas, la etiqueta de medición no se carga. Las medidas introducidas en las calculadoras se procesan localmente.');
@@ -71,17 +75,19 @@ export function renderPage(page) {
   <link rel="icon" href="${base}assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="${base}assets/site.css?v=${assetVersion}">
   <link rel="stylesheet" href="${base}assets/commerce-entry.css?v=${assetVersion}">
+  <link rel="stylesheet" href="${base}assets/care.css?v=${assetVersion}">
   <script type="application/ld+json">${schema}</script>
   <script type="application/ld+json">${breadcrumbSchema}</script>
   <script type="module" src="${base}assets/app.js?v=${assetVersion}"></script>
   <script type="module" src="${base}assets/visuals.js?v=${assetVersion}"></script>
   <script type="module" src="${base}assets/quality-fixes.js?v=${assetVersion}"></script>
+  <script type="module" src="${base}assets/care-diagnostic.js?v=${assetVersion}"></script>
 </head>
 <body class="page-${clean(page.path).replaceAll('/', '-') || 'inicio'}${page.tool ? ' page-tool' : ''}">
   <a class="skip-link" href="#contenido">Saltar al contenido</a>
-  <header class="site-header"><a class="brand" href="${base}" aria-label="TierraExacta, inicio"><svg viewBox="0 0 44 44" aria-hidden="true"><path d="M8 9h28l-4 27H12z"/><path d="M5 9h34M14 21c5-5 11-6 18-5M12 29c8-4 14-4 21-3"/></svg><span>Tierra<strong>Exacta</strong></span></a><button class="menu" type="button" data-menu aria-controls="site-nav" aria-expanded="false">Menú</button><nav id="site-nav" aria-label="Principal">${nav('herramientas/', 'Herramientas')}${nav('guias/medir-maceta/', 'Cómo medir')}${nav('metodologia/', 'Fórmulas')}</nav></header>
+  <header class="site-header"><a class="brand" href="${base}" aria-label="TierraExacta, inicio"><svg viewBox="0 0 44 44" aria-hidden="true"><path d="M8 9h28l-4 27H12z"/><path d="M5 9h34M14 21c5-5 11-6 18-5M12 29c8-4 14-4 21-3"/></svg><span>Tierra<strong>Exacta</strong></span></a><button class="menu" type="button" data-menu aria-controls="site-nav" aria-expanded="false">Menú</button><nav id="site-nav" aria-label="Principal">${nav('herramientas/', 'Herramientas')}${nav('cuidados/', 'Cuidados')}${nav('guias/medir-maceta/', 'Cómo medir')}${nav('metodologia/', 'Fórmulas')}</nav></header>
   <main id="contenido">${content}</main>
-  <footer><div><a class="footer-brand" href="${base}">TierraExacta</a><p>Calcula primero. Compra solo la tierra que necesitas.</p></div><nav aria-label="Información"><a href="${base}preguntas-frecuentes/">Preguntas</a><a href="${base}sobre/">Sobre</a><a href="${base}privacidad/">Privacidad</a></nav><p class="footer-note">Las cifras son una estimación geométrica. Comprueba siempre las medidas interiores.</p></footer>
+  <footer><div><a class="footer-brand" href="${base}">TierraExacta</a><p>Calcula primero. Compra solo la tierra que necesitas.</p></div><nav aria-label="Información"><a href="${base}cuidados/">Cuidados</a><a href="${base}diagnostico-planta/">Diagnóstico</a><a href="${base}preguntas-frecuentes/">Preguntas</a><a href="${base}sobre/">Sobre</a><a href="${base}privacidad/">Privacidad</a></nav><p class="footer-note">Las cifras son una estimación geométrica. Las guías de cuidado son orientativas y dependen de la especie y sus condiciones.</p></footer>
 </body>
 </html>`;
 }
