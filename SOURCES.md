@@ -46,6 +46,19 @@ Precios, formatos y características del catálogo comercial comprobados el 12 d
 
 - JARDIN202 universal premium 20 L: https://www.manomano.es/p/sustrato-universal-premium-con-fibras-de-coco-turbas-sustrato-vegetal-perlita-y-enriquecido-ideal-para-todo-tipo-de-plantas-83134666?model_id=88070510
 
+## Compra calculada de mezclas
+
+La calculadora de mezclas intenta asociar únicamente nombres de componentes reconocidos con productos comprobados. Si el usuario escribe un material que no coincide con el catálogo, no se sustituye por otro producto aproximado. Para cada coincidencia se redondea a envases completos y se muestran litros comprados, sobrante y coste.
+
+Productos comprobados el 12 de septiembre de 2026:
+
+- COMPO SANA sustrato universal 5 L — Leroy Merlin — 2,99 €: https://www.leroymerlin.es/productos/sustrato-universal-compo-sana-para-todo-tipo-de-plantas-interior-y-exterior-5l-259063.html
+- BioFlower compost orgánico 20 L — ManoMano — 16,21 €: https://www.manomano.es/p/compost-organico-bioflower-20-l-34825006
+- Flower perlita 5 L — BAUHAUS — 4,75 €: https://www.bauhaus.es/activadores-del-suelo-y-fortificacion-de-plantas/flower-perlita/p/27518566
+- MASSÓ fibra de coco 5 L — Leroy Merlin — 5,49 €: https://www.leroymerlin.es/productos/fibra-de-coco-masso-5l-16239643.html
+
+Los precios son una fotografía de la fecha de verificación y pueden variar por promoción, vendedor, tienda, zona o disponibilidad. No se incorpora el transporte al coste de la mezcla.
+
 ## Metodología comercial
 
 El comparador calcula la compra real necesaria para el volumen objetivo: número entero de sacos, litros comprados, sobrante y coste total. El índice calidad-precio combina un 55 % de puntuación económica y un 45 % de índice técnico.
