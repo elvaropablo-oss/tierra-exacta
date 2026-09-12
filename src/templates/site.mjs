@@ -3,6 +3,7 @@ import { site } from '../../site.config.mjs';
 const base = site.basePath;
 const clean = (value = '') => value.replace(/^\/+|\/+$/g, '');
 const active = (current, target) => clean(current) === clean(target) || clean(current).startsWith(`${clean(target)}/`);
+const assetVersion = '20260912-2';
 
 export function button(path, label, quiet = false) {
   return `<a class="button${quiet ? ' button--quiet' : ''}" href="${base}${path}">${label}<span aria-hidden="true">↗</span></a>`;
@@ -51,12 +52,12 @@ export function renderPage(page) {
   <meta name="twitter:title" content="${page.title}">
   <meta name="twitter:description" content="${page.description}">
   <link rel="icon" href="${base}assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="${base}assets/site.css">
+  <link rel="stylesheet" href="${base}assets/site.css?v=${assetVersion}">
   <script type="application/ld+json">${schema}</script>
   <script type="application/ld+json">${breadcrumbSchema}</script>
-  <script type="module" src="${base}assets/app.js"></script>
-  <script type="module" src="${base}assets/visuals.js"></script>
-  <script type="module" src="${base}assets/quality-fixes.js"></script>
+  <script type="module" src="${base}assets/app.js?v=${assetVersion}"></script>
+  <script type="module" src="${base}assets/visuals.js?v=${assetVersion}"></script>
+  <script type="module" src="${base}assets/quality-fixes.js?v=${assetVersion}"></script>
 </head>
 <body class="page-${clean(page.path).replaceAll('/', '-') || 'inicio'}${page.tool ? ' page-tool' : ''}">
   <a class="skip-link" href="#contenido">Saltar al contenido</a>
