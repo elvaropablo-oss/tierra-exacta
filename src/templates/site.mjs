@@ -3,7 +3,7 @@ import { site } from '../../site.config.mjs';
 const base = site.basePath;
 const clean = (value = '') => value.replace(/^\/+|\/+$/g, '');
 const active = (current, target) => clean(current) === clean(target) || clean(current).startsWith(`${clean(target)}/`);
-const assetVersion = '20260912-5';
+const assetVersion = '20260912-6';
 
 export function button(path, label, quiet = false) {
   return `<a class="button${quiet ? ' button--quiet' : ''}" href="${base}${path}">${label}<span aria-hidden="true">↗</span></a>`;
@@ -49,7 +49,7 @@ export function renderPage(page) {
   if (page.path === '' || page.path === 'herramientas') content = content.replace('</section>', `</section>${commerceEntry()}`);
   if (page.path === 'sacos-sustrato') content = content.replace('<section class="calculator">', `${commercePrelude()}<section class="calculator">`);
   if (page.path === 'metodologia') content += commerceMethodology();
-  if (page.path === 'privacidad') content = content.replace('Esta versión no instala Google Analytics ni servicios publicitarios.','Google Analytics solo se carga después de que aceptes la analítica mediante el control de consentimiento. Si no aceptas, la etiqueta de medición no se carga. Las medidas introducidas en las calculadoras se procesan localmente.');
+  if (page.path === 'privacidad') content = content.replace('Google Analytics está pendiente de configurarse con un identificador propio para esta web.','Google Analytics solo se carga después de que aceptes la analítica mediante el control de consentimiento. Si no aceptas, la etiqueta de medición no se carga. Las medidas introducidas en las calculadoras se procesan localmente.');
   return `<!doctype html>
 <html lang="es">
 <head>
