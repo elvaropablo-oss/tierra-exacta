@@ -58,8 +58,10 @@ if (mixForm) {
     try {
       const components = [1, 2, 3].map((index) => ({ name: get(form, `name${index}`), percentage: get(form, `percentage${index}`) }));
       const result = substrateMix({ totalLitres: get(form, 'totalLitres'), components });
-      reveal('#mix-result', `<p class="result-label">Mezcla para ${fmt(result.total, 2)} litros</p><h2>Reparto exacto</h2><ol class="mix-list">${result.components.map((component) => `<li><span>${component.name}<small>${fmt(component.percentage, 1)} %</small></span><strong>${fmt(component.litres, 2)} L</strong></li>`).join('')}</ol><p class="fineprint">La herramienta reparte volumen. Ajusta la receta a la planta y al producto que vayas a usar.</p>`);
-      save({ type: 'mix', ...result, savedAt: new Date().toISOString() });
+      reveal('#mix-result', `<p class="result-label">Mezcla para ${fmt(result.total, 2)} litros</p><h2>Reparto exacto</h2><ol class="mix-list">${result.components.map((component) => `<li><span>${component.name}<small>${fmt(component.percentage, 1)} %</small></span><strong>${fmt(component.litres, 2)} L</strong></li>`).join('')}</ol><div class="result-actions"><a class="button button--clay" href="#mix-commerce" data-view-mix-products>Comprar productos para esta mezcla <span aria-hidden="true">↓</span></a></div><p class="fineprint">La herramienta reparte volumen. Ajusta la receta a la planta y al producto que vayas a usar.</p>`);
+      const stored={ type: 'mix', ...result, savedAt: new Date().toISOString() };
+      save(stored);
+      document.dispatchEvent(new CustomEvent('tierra:mix-result',{detail:result}));
     } catch (reason) { fail(form, reason); }
   });
 }
