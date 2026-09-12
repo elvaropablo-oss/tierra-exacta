@@ -48,21 +48,44 @@ Precios, formatos y características del catálogo comercial comprobados el 12 d
 
 ## Compra calculada de mezclas
 
-La calculadora de mezclas intenta asociar únicamente nombres de componentes reconocidos con productos comprobados. Si el usuario escribe un material que no coincide con el catálogo, no se sustituye por otro producto aproximado. Para cada coincidencia se redondea a envases completos y se muestran litros comprados, sobrante y coste.
+La calculadora de mezclas intenta asociar únicamente nombres de componentes reconocidos con productos comprobados. Si el usuario escribe un material que no coincide con el catálogo, no se sustituye por otro producto aproximado. Para cada opción se redondea a envases completos y se muestran litros comprados, sobrante y coste.
+
+Cuando existen varias opciones verificadas del mismo componente, la opción recomendada usa una puntuación relativa de 55 % coste total para completar los litros y 45 % ajuste al volumen comprado. Un ajuste del 100 % significa que el volumen comprado coincide exactamente con lo necesario. Además se identifican de forma independiente la opción más barata y la que deja menos sobrante. La afiliación pesa 0 % en el cálculo.
 
 Productos comprobados el 12 de septiembre de 2026:
 
-- COMPO SANA sustrato universal 5 L — Leroy Merlin — 2,99 €: https://www.leroymerlin.es/productos/sustrato-universal-compo-sana-para-todo-tipo-de-plantas-interior-y-exterior-5l-259063.html
+### Sustrato universal
+
+- COMPO SANA 5 L — Leroy Merlin — 2,99 €: https://www.leroymerlin.es/productos/sustrato-universal-compo-sana-para-todo-tipo-de-plantas-interior-y-exterior-5l-259063.html
+- Flower universal ecológico 10 L — BAUHAUS — 3,95 €: https://www.bauhaus.es/fertilizantes-de-plantas-y-universales/flower-sustrato-para-plantas-universal-ecologico/p/31509613
+- COMPO SANA 10 L — Leroy Merlin — 4,69 €: https://www.leroymerlin.es/productos/sustrato-universal-compo-sana-para-todo-tipo-de-plantas-interior-y-exterior-10l-259035.html
+- COMPO SANA 20 L — Leroy Merlin — 6,49 €: https://www.leroymerlin.es/productos/sustrato-universal-compo-sana-para-todo-tipo-de-plantas-interior-y-exterior-20l-258972.html
+- COMPO SANA confort 25 L — Leroy Merlin — 9,99 €: https://www.leroymerlin.es/productos/sustrato-universal-compo-sana-para-todo-tipo-de-plantas-en-bolsa-confort-25l-12362616.html
+- Sustrato universal 100 % compost vegetal 50 L — Leroy Merlin — 4,99 €: https://www.leroymerlin.es/productos/sustrato-universal-para-todo-tipo-de-plantas-50l-14662865.html
+
+### Compost
+
 - BioFlower compost orgánico 20 L — ManoMano — 16,21 €: https://www.manomano.es/p/compost-organico-bioflower-20-l-34825006
+
+No se ha añadido un supuesto formato pequeño de compost porque no se ha verificado una alternativa exacta comparable en las tiendas objetivo. Para mezclas pequeñas la interfaz avisa si el formato de 20 L deja un sobrante muy alto.
+
+### Perlita
+
+- MASSÓ perlita 5 L — Leroy Merlin — 4,49 €: https://www.leroymerlin.es/productos/perlita-masso-5l-para-0-25-m2-16239650.html
 - Flower perlita 5 L — BAUHAUS — 4,75 €: https://www.bauhaus.es/activadores-del-suelo-y-fortificacion-de-plantas/flower-perlita/p/27518566
+
+### Fibra de coco
+
 - MASSÓ fibra de coco 5 L — Leroy Merlin — 5,49 €: https://www.leroymerlin.es/productos/fibra-de-coco-masso-5l-16239643.html
 
 Los precios son una fotografía de la fecha de verificación y pueden variar por promoción, vendedor, tienda, zona o disponibilidad. No se incorpora el transporte al coste de la mezcla.
 
 ## Metodología comercial
 
-El comparador calcula la compra real necesaria para el volumen objetivo: número entero de sacos, litros comprados, sobrante y coste total. El índice calidad-precio combina un 55 % de puntuación económica y un 45 % de índice técnico.
+El comparador general de sustratos calcula la compra real necesaria para el volumen objetivo: número entero de sacos, litros comprados, sobrante y coste total. Su índice calidad-precio combina un 55 % de puntuación económica y un 45 % de índice técnico.
 
 El índice técnico utiliza únicamente características declaradas en las fuentes comerciales: uso universal, nutrientes o abono, aireación/drenaje, gestión de humedad, ausencia de turba y aptitud para agricultura ecológica. Si la cobertura de datos técnicos no alcanza el mínimo definido por el motor común, no se publica una puntuación de calidad-precio para ese producto.
+
+La compra calculada de mezclas usa otra comparación porque el objetivo es ajustar formatos: 55 % coste de compra y 45 % ajuste al volumen, siempre entre productos verificados de la misma categoría. Las comisiones de afiliación y el estado de aprobación de una tienda no intervienen en ese orden.
 
 En las páginas de cuidados, cuando se muestran productos, se filtran únicamente por características documentadas que encajen con el contexto (por ejemplo, aireación/drenaje declarado) y se ordenan por precio por litro dentro del filtro. Las comisiones de afiliación y el estado de aprobación de una tienda no intervienen en ese orden.
